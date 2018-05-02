@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1">
+    <title>拼图游戏</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css?v=1">
+    <link rel="stylesheet" href="https://files.cheyuu.com/src/im/css/swiper.min.css?v=1">
+    <link rel="stylesheet" href="css/main.css?v=1">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://files.cheyuu.com/src/im/js/swiper.min.js"></script>
+    <script src="js/fabric.js?v=1"></script>
+    <script src="js/app.js?v=2"></script>
+</head>
+
+<body>
+    <canvas id="mainCanvas" class="main_canvas"></canvas>
+    <div class="canvas_bg_switch switch_highway canvasBgSwitch" data-index="1">
+    </div>
+    <div class="canvas_bg_switch switch_scene canvasBgSwitch" data-index="2">
+    </div>
+    <div class="canvas_save_btn canvasSaveBtn">
+        保存
+    </div>
+    <div class="ele_container" id="eleContainer">
+        <div class="weui-panel weui-panel_access hide" id="resultContainer">
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_appmsg">
+                  <div class="weui-media-box__hd">
+                    <img class="weui-media-box__thumb" src="images/qrcode.png">
+                  </div>
+                  <div class="weui-media-box__bd">
+                    <h4 class="weui-media-box__title">长按图片，定制属于你的理想假期</h4>
+                    <p class="weui-media-box__desc">获取真实有趣的假期活动<br/>欢迎回复关键词“假期”</p>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="swiper-container" id="swiperContainer">
+            <div class="ele-pagination weui-navbar"></div>
+            <div class="swiper-wrapper" id="swiperWrapper">
+                <div class="swiper-slide eleList"></div>
+                <div class="swiper-slide eleList"></div>
+                <div class="swiper-slide eleList"></div>
+                <div class="swiper-slide eleList"></div>
+                <div class="swiper-slide eleList"></div>
+            </div>
+            <div class="ele_details_popup hide" id="eleDetailsPopup">
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+    PJY.init({
+        id: 'mainCanvas'
+    });
+});
+</script>
+</html>
