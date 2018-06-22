@@ -90,6 +90,10 @@
                     cate: 1,
                     list: [
                         {
+                            src: 'images/man/huzi/1010.png',
+                            canvasSrc: 'images/man/huzi/10.png',
+                        },
+                        {
                             src: 'images/man/glass/11.png',
                             canvasSrc: 'images/man/glass/1.png',
                         },
@@ -132,6 +136,10 @@
                     title: '胡子',
                     cate: 2,
                     list: [
+                        {
+                            src: 'images/man/huzi/1010.png',
+                            canvasSrc: 'images/man/huzi/10.png',
+                        },
                         {
                             src: 'images/man/huzi/11.png',
                             canvasSrc: 'images/man/huzi/1.png',
@@ -284,6 +292,10 @@
                     cate: 1,
                     list: [
                         {
+                            src: 'images/man/huzi/1010.png',
+                            canvasSrc: 'images/man/huzi/10.png',
+                        },
+                        {
                             src: 'images/woman/glass/11.png',
                             canvasSrc: 'images/woman/glass/1.png',
                         },
@@ -326,6 +338,10 @@
                     title: '口红',
                     cate: 2,
                     list: [
+                        {
+                            src: 'images/man/huzi/1010.png',
+                            canvasSrc: 'images/man/huzi/10.png',
+                        },
                         {
                             src: 'images/woman/kouhong/11.png',
                             canvasSrc: 'images/woman/kouhong/1.png',
@@ -433,6 +449,14 @@
         {
             src: 'images/child2.png',
             canvasSrc: 'images/child2.png',
+        },
+        {
+            src: 'images/child3.png',
+            canvasSrc: 'images/child3.png',
+        },
+        {
+            src: 'images/child4.png',
+            canvasSrc: 'images/child4.png',
         },
     ];
     eles[2] = [
@@ -557,6 +581,72 @@
         return mySwiper;
     };
 
+    var addResultPart = function( callback ){
+        var baseTop = canvas.height - 100;
+        var rect = new fabric.Rect({
+            fill: 'white',
+            height: 100,
+            top: baseTop,
+            left: 0,
+            width: canvas.width,
+            selectable: false
+        });
+        canvas.add(rect);
+
+        var text1 = new fabric.Text('长按图片，定制属于你的理想假期', {
+            top: baseTop+20,
+            left: 100,
+            selectable: false,
+            fontSize: 14,
+
+            fontFamily: '微软雅黑',
+        });
+        canvas.add(text1);
+
+        var text2 = new fabric.Text('获取真实有趣的假期活动', {
+            top: baseTop+50,
+            left: 100,
+            selectable: false,
+            fontSize: 12,
+            fontFamily: '微软雅黑',
+        });
+        canvas.add(text2);
+
+        var text3 = new fabric.Text('欢迎关注“车友加油”回复关键词“假期”', {
+            top: baseTop+70,
+            left: 100,
+            selectable: false,
+            fontSize: 12,
+            fontFamily: '微软雅黑',
+            hasBorders: false,
+              strokeWidth: 0,
+              borderScaleFactor: 0,
+        });
+        canvas.add(text3);
+
+        fabric.util.loadImage('images/qrcode345.png', function(img){
+            if(img == null){
+                alert('素材加载失败');
+                return;
+            }
+            // console.log(img.width);
+            var scal = 80/img.width;
+            var imgObj = new fabric.Image(img);
+            imgObj.setOptions({
+                selectable: false,
+                width: img.width,
+                height: img.width,
+                top: baseTop+10,
+                left: 10,
+                scaleX:scal,
+                scaleY:scal
+            });
+            canvas.add(imgObj);
+
+            callback();
+        });
+    };
+
     var init = function(options){
         var canvasObj = $('#'+options.id);
         var toolbarHeight = 40;
@@ -604,7 +694,6 @@
                 clickable :true,
                 clickableClass :'weui-navbar__item',
                 renderCustom: function(swiper, current, total){
-                    console.log(current);
                     return '<div onclick="PJY.slideTo(1, true)" class="weui-navbar__item '+
                         (current==1?'weui_bar__item_on':'')
                     +'"></div>'
@@ -670,19 +759,37 @@
             $('.canvasBgSwitch').addClass('hide');
             $('.canvasSaveBtn').addClass('hide');
             $('#resultContainer').removeClass('hide');
+
+
+            var installTimer = function(showStatus){
+                if(showStatus){
+                    setTimeout(function(){
+                        $('#screenShotTip').fadeOut(500, function(){
+                            installTimer(false);
+                        });
+                    }, 500);
+                }else{
+                    setTimeout(function(){
+                        $('#screenShotTip').fadeIn(500, function(){
+                            installTimer(true);
+                        });
+                    }, 2500);
+                }
+            };
+            // installTimer(false);
             // console.log(JSON.stringify(canvas));
-            // if(!canvas.supports('toDataURL')){
-            //     alert('not support toDataURL');
-            //     return;
-            // }
-            // console.log(
-            //     canvas.toDataURL({
-            //         format: 'png',
-            //         multiplier: 2
-            //     })
-            // );
+
+            addResultPart(function(){
+                $('#exportPNG img').attr('src', canvas.toDataURL({
+                    format: 'png',
+                    enableRetinaScaling: true
+                }));
+                $('#exportPNG').removeClass('hide');
+            });
         });
     };
+
+
 
     var isSwiperWrapperClosed = function(){
         if( $('#swiperWrapper').css('display') == 'none' ){
@@ -742,7 +849,7 @@
         str += '<div class="popup_left">';
         for(var i in ele.details){
             var activeCls = i == 0 ? 'active' : '';
-            str += '<div class="popup_nav popupNav '+activeCls+'" data-index="'+i+'">';
+            str += '<div class="popup_nav popupNav '+activeCls+'" data-index="'+ele.details[i]['cate']+'">';
             str += ele.details[i]['title'];
             str += '</div>';
         }
@@ -751,7 +858,7 @@
         str += '<div class="popup_right">';
         for(var i in ele.details){
             var hideCls = i == 0?'':'hide';
-            str += '<div class="popup_content popupContent '+hideCls+'">';
+            str += '<div class="popup_content popupContent'+ele.details[i]['cate']+' popupContent '+hideCls+'">';
             var detailList = ele.details[i]['list'];
             if(detailList.length == 0){continue;}
             str += '<div class="weui-flex">';
@@ -770,7 +877,6 @@
         str += '</div>';
         $('#eleDetailsPopup').html(str);
         var maxHiehgt = $('#eleContainer .eleList').height();
-        console.log(maxHiehgt);
         $('#eleContainer .eleListItem').css('height', Math.ceil(maxHiehgt/3) + 10);
         $('#eleContainer .eleListItem').css('line-height', ( Math.ceil(maxHiehgt/3) + 10 ) + 'px');
         syncStatusToDetailsPopup();
@@ -778,15 +884,15 @@
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
             var chooseIndex = $(this).data('index');
-            $('.popupContent').each(function(index){
-                if(index == chooseIndex){
-                    $(this).removeClass('hide');
-                }else{
-                    $(this).addClass('hide');
-                }
-            });
+            $('.popupContent').addClass('hide');
+            $('.popupContent'+chooseIndex).removeClass('hide');
         });
         $('.popupNav').css('line-height', $('.popupNav').height() + 'px');
+        // 检查下当前激活元素的
+        var obj = canvas.getActiveObject();
+        if(obj.type != 'group'){return false;}
+        if(typeof obj.lastClickItem === 'undefined'){return false;}
+        $('.popupNav[data-index='+obj.lastClickItem+']').trigger('click');
     }
 
     var hasDetails = function(ele){
@@ -910,7 +1016,7 @@
             returnImageDefer(tmpEle['details'][4]['list'][0]['canvasSrc'], {
                 srcCate: tmpEle['details'][4]['cate'],
                 selectable: false,
-            }, imgObjArr),
+            }, imgObjArr)
         ).done(function(){
             // group里面的层级取决于add的先后顺序，先添加的在最下面
             var group = new fabric.Group(imgObjArr.reverse(), {
@@ -974,7 +1080,8 @@
                 scaleY: scaleY,
                 angle: initAngle,
                 left: centerLeft,
-                top: centerTop
+                top: centerTop,
+                lastClickItem: imgCate
             });
             canvas.add(group);
             setCustomControl(group);
@@ -982,7 +1089,14 @@
         });
     };
 
+    var removeOverlay = function(){
+        $('#loadingToast').removeClass('hide');
+        setTimeout(function(){
+            $('#mainOverlay').remove();
+        }, 1000);
+    };
     PJY.init = init;
+    PJY.removeOverlay = removeOverlay;
     PJY.getCanvas = getCanvas;
     PJY.addEleToCanvas = addEleToCanvas;
     PJY.addDetailToCanvas = addDetailToCanvas;
